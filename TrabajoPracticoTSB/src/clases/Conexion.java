@@ -7,18 +7,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 public class Conexion 
 {
     Connection conexion;
     
+    
     public Conexion()
     {
         
     }
+
+    public Connection getConexion() {
+        return conexion;
+    }
     
-    public void conectar()
+    private void abrirConexion()
     {
         try 
         {
@@ -32,13 +38,13 @@ public class Conexion
             }
     }
     
-    public boolean ejecutarQuery(String query)
+    private boolean ejecutarQuery(PreparedStatement ps)
     {
         boolean seEfectuo = false;
         try
         {
             conexion.setAutoCommit(false);
-            PreparedStatement ps = conexion.prepareStatement(query);
+          //  PreparedStatement ps = conexion.prepareStatement(query);
             ps.executeUpdate();
             conexion.commit();
             conexion.setAutoCommit(true);
@@ -60,7 +66,7 @@ public class Conexion
         return seEfectuo;
     }
     
-    public void cerrarConexion()
+    private void cerrarConexion()
     {
         try
         {
@@ -72,7 +78,33 @@ public class Conexion
         }
     }
     
-    
 
-    
+    public PreparedStatement prepararStatementVocabulario(String palabra, int frec)
+    {
+        PreparedStatement ps = null;
+        try{
+        ps = conexion.prepareStatement("INSERT INTO Vocabulario(id, palabra, frecuencia) VALUES (,?,?)");
+        ps.setString(2, palabra);
+        ps.setInt(3, frec);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return ps;
+    }
+        public PreparedStatement prepararStatementDocumento(String palabra, int frec)
+    {
+        PreparedStatement ps = null;
+        try{
+        ps = conexion.prepareStatement("INSERT INTO Vocabulario(id, palabra, frecuencia) VALUES (,?,?)");
+        ps.setString(2, palabra);
+        ps.setInt(3, frec);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return ps;
+    }
 }
