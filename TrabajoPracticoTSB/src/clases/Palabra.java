@@ -16,6 +16,7 @@ public class Palabra implements Serializable
     public Palabra(String info, Documento docu) {
         this.info = info;
         this.frecuencia = 1;
+        this.doc = new ArrayList();
         this.doc.add(docu);
     }
 
@@ -46,9 +47,16 @@ public class Palabra implements Serializable
         return "Palabra{" + "info=" + info + ", frecuencia=" + frecuencia + '}';
     }
 
-    public ArrayList<Documento> getDoc() {
-        return doc;
+    public int[] getDoc() {
+        int vec[] = new int[doc.size()];
+        for (int i = 0; i < doc.size(); i++) 
+        {
+            vec[i]=doc.get(i).getId();
+        }
+        return vec;
     }
+    
+    
     
     
     
