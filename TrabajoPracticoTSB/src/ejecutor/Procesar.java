@@ -4,7 +4,9 @@ package ejecutor;
 import clases.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,6 +27,7 @@ public class Procesar extends HashMap
    
     public void procesarDocumento(Documento doc)
     {
+        c.abrirConexion();
         c.insertDoc(doc);
         String palabra;
         String entrada;
@@ -35,7 +38,7 @@ public class Procesar extends HashMap
             while(sc.hasNextLine())
             {
                 entrada = sc.nextLine();
-                StringTokenizer st = new StringTokenizer(entrada," ,-0123456789-{}*[].:()#");
+                StringTokenizer st = new StringTokenizer(entrada," ,-0123456789-{}*[].+´:!¡?¿|°~<>=/Ã&%$³«»±¼ã©()#;_'");
                 while(st.hasMoreTokens())
                 {
                     palabra = st.nextToken();
@@ -51,6 +54,7 @@ public class Procesar extends HashMap
                     }
                 }
             }
+            c.cerrarConexion();
         }
         catch(FileNotFoundException e)
         {
@@ -94,25 +98,36 @@ public class Procesar extends HashMap
     
     public void procesarConexion(Documento d)
     {
+        c.abrirConexion();
+        c.setAutoCommit(false);
         Palabra p;
         for(Map.Entry entry : hm.entrySet())
         {
+            
             p = (Palabra)entry.getValue();
             if(c.estaPalabra(p))
             {
+                
                 c.updateFrec(p);
                 if(!c.esDeDocumento(p))
                 {
+                    
                     c.insertPalxDoc(d, p);
-                   
                 }
             }
             else
             {
+                
                 c.insertVocabulario(p);
                 c.insertPalxDoc(d, p);
             }
         }
+        c.setAutoCommit(true);
+        c.realizarCommit();
+        c.cerrarConexion();
+        
+        }
+    
     }
     
     
@@ -139,4 +154,4 @@ public class Procesar extends HashMap
 //            }
 //        }
 //    }
-}
+

@@ -66,7 +66,7 @@ public class Conexion
         return seEfectuo;
     }
     
-    private void cerrarConexion()
+    public void cerrarConexion()
     {
         try
         {
@@ -114,7 +114,7 @@ public class Conexion
           String pal;
         try 
         {
-            this.abrirConexion();
+//            this.abrirConexion();
             Statement st = conexion.createStatement();
             ResultSet rs = st.executeQuery("SELECT palabra FROM Vocabulario WHERE palabra ='"+p.getInfo()+"'");
           
@@ -129,7 +129,7 @@ public class Conexion
             }
             rs.close();
             st.close();
-            this.cerrarConexion();
+//            this.cerrarConexion();
         } 
         catch (SQLException e) 
         {
@@ -143,7 +143,7 @@ public class Conexion
           boolean es= false;
           try
           {
-              this.abrirConexion();
+//              this.abrirConexion();
               Statement st = conexion.createStatement();
               ResultSet rs = st.executeQuery("SELECT v.palabra FROM PalxDoc p JOIN Vocabulario v ON (p.idPal = v.id) WHERE v.palabra = '" + p.getInfo()+"'");
               if(rs.next())
@@ -153,7 +153,7 @@ public class Conexion
               rs.close();
                st.close();
                
-               this.cerrarConexion();
+//               this.cerrarConexion();
           }
           catch(SQLException e)
           {
@@ -168,7 +168,7 @@ public class Conexion
           int frec = 0;
           try
           {
-              this.abrirConexion();
+//              this.abrirConexion();
               Statement st = conexion.createStatement();
               ResultSet rs = st.executeQuery("SELECT frecuencia FROM Vocabulario WHERE palabra ='" + p.getInfo()+ "'");
               while(rs.next())
@@ -183,7 +183,7 @@ public class Conexion
               st.close();
               
              
-              this.cerrarConexion();
+//              this.cerrarConexion();
           }
           catch(SQLException e)
           {
@@ -197,7 +197,7 @@ public class Conexion
           boolean seInserto = false;
           try
           {
-              this.abrirConexion();
+//              this.abrirConexion();
               if(!this.verificarDocumento(d))
               {PreparedStatement ps = conexion.prepareStatement("INSERT INTO Documento (nombre) VALUES ('"+d.getNombre()+"')");
               ps.executeUpdate();
@@ -205,7 +205,7 @@ public class Conexion
               ps.close();
               }
              
-              this.cerrarConexion();
+//              this.cerrarConexion();
           }
           catch(SQLException e)
           {
@@ -218,7 +218,7 @@ public class Conexion
          boolean esta=false;
             try
           {
-              this.abrirConexion();
+//              this.abrirConexion();
               Statement st = conexion.createStatement();
               ResultSet rs = st.executeQuery("SELECT nombre FROM Documento WHERE nombre='"+d.getNombre()+"'");
           while(rs.next())
@@ -241,12 +241,12 @@ public class Conexion
           boolean seInserto = false;
           try 
           {
-              this.abrirConexion();
+//              this.abrirConexion();
               PreparedStatement ps = conexion.prepareStatement("INSERT INTO Vocabulario (palabra) VALUES ('" + p.getInfo() + "')");
               ps.executeUpdate();
               seInserto=true;
               ps.close();
-              this.cerrarConexion();
+//              this.cerrarConexion();
           }
           catch(SQLException e)
           {
@@ -261,7 +261,7 @@ public class Conexion
           int idPal=0, idDoc = 0;
           try
           {
-              this.abrirConexion();
+//              this.abrirConexion();
               Statement st = conexion.createStatement();
               ResultSet rs = st.executeQuery("SELECT id FROM Vocabulario WHERE palabra ='" + p.getInfo()+"'");
               while(rs.next())
@@ -286,7 +286,7 @@ public class Conexion
               
               ps.close();
               
-              this.cerrarConexion();
+//              this.cerrarConexion();
               seInserto=true;
           }
           catch(SQLException e)
@@ -295,6 +295,43 @@ public class Conexion
 
           }
           return seInserto;
+      }
+      
+      public void setAutoCommit(boolean d)
+      {
+          try
+          {
+               conexion.setAutoCommit(d);
+          }
+         catch(SQLException e)
+         {
+             
+         }
+      }
+      
+      public void realizarCommit()
+      {
+          try
+          {
+              conexion.commit();
+          }
+          catch(SQLException e)
+          {
+              
+          }
+          
+      }
+      
+      public void realizarRollBack()
+      {
+          try
+          {
+              conexion.rollback();
+          }
+          catch(SQLException e)
+          {
+              
+          }
       }
 
 
